@@ -189,12 +189,12 @@ Check your query: [error details]
 ### Environment Variables
 All credentials stored in `.env.local` (never committed to git):
 ```bash
-SNOWFLAKE_ACCOUNT=xyz12345.us-east-1
+SNOWFLAKE_ACCOUNT=A5701997473071-MPA05784
 SNOWFLAKE_USER=your_bootcamp_user
 SNOWFLAKE_PASSWORD=your_secure_password
-SNOWFLAKE_DATABASE=bootcamp_db
+SNOWFLAKE_DATABASE=dm_db
 SNOWFLAKE_SCHEMA=training
-SNOWFLAKE_WAREHOUSE=compute_wh
+SNOWFLAKE_WAREHOUSE=mit_sandbox_wh
 SNOWFLAKE_ROLE=bootcamp_student_role
 ```
 
@@ -256,7 +256,7 @@ See `docs/troubleshooting.md` for solutions.
 - **Duration**: 5 days, 20 hours
 - **Format**: Hands-on labs with AI assistance
 - **Level**: Intermediate (requires basic SQL knowledge)
-- **Tools**: Cursor, Snowflake, Python
+- **Tools**: Cursor, Snowflake, Python, Claude
 - **Cost**: Free (for bootcamp participants)
 
 ---
