@@ -8,7 +8,7 @@ This repository contains all lab questions, solution checkers, and AI prompts fo
 
 ### 1. Clone This Repository
 ```bash
-git clone https://github.com/pabbatiyatindra/snowflake-bootcamp-labs.git
+git clone https://github.com/pabbatiyatindra/snowflake-cursor-bootcamp-labs.git
 cd snowflake-bootcamp-labs
 ```
 
@@ -18,12 +18,12 @@ cd snowflake-bootcamp-labs
 cp .env.example .env.local
 
 # Edit with your Snowflake credentials
-# SNOWFLAKE_ACCOUNT=xyz12345.us-east-1
-# SNOWFLAKE_USER=your_username
-# SNOWFLAKE_PASSWORD=your_password
-# SNOWFLAKE_DATABASE=bootcamp_db
+# SNOWFLAKE_ACCOUNT=A5701997473071-MPA05784
+# SNOWFLAKE_USER=<your_username>
+# SNOWFLAKE_PASSWORD=<your_password>
+# SNOWFLAKE_DATABASE=dm_db
 # SNOWFLAKE_SCHEMA=training
-# SNOWFLAKE_WAREHOUSE=compute_wh
+# SNOWFLAKE_WAREHOUSE=mit_sandbox_wh
 # SNOWFLAKE_ROLE=bootcamp_student_role
 ```
 
