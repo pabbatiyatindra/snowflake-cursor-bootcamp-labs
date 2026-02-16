@@ -1,0 +1,37 @@
+{
+  "task_description": "Use Cortex LLM functions in SQL for text processing",
+  "cortex_functions_tested": ["COMPLETE", "SUMMARIZE", "EXTRACT"],
+  "validation_rules": [
+    "Must use SNOWFLAKE.CORTEX.COMPLETE() with model 'claude-3-5-sonnet'",
+    "Must use SNOWFLAKE.CORTEX.SUMMARIZE() for review summaries",
+    "Must use SNOWFLAKE.CORTEX.EXTRACT() with JSON prompt",
+    "Must process 3-5 rows from each source table",
+    "Must create result tables (or use CREATE AS)",
+    "Results must not be NULL",
+    "COMPLETE results should be descriptive text",
+    "SUMMARIZE results should be shorter than original",
+    "EXTRACT results should contain structured data"
+  ],
+  "expected_output_samples": {
+    "descriptions": {
+      "input": "Blue Running Shoes",
+      "expected_type": "descriptive text about the product"
+    },
+    "summaries": {
+      "input": "[long review text]",
+      "expected_type": "condensed 1-2 sentence summary"
+    },
+    "keywords": {
+      "input": "[review text]",
+      "expected_type": "JSON or comma-separated keywords"
+    }
+  },
+  "concepts_tested": [
+    "Cortex COMPLETE for content generation",
+    "Cortex SUMMARIZE for text condensing",
+    "Cortex EXTRACT for structured extraction",
+    "Prompt engineering for specific outputs",
+    "SQL integration with AI models",
+    "Cost awareness (tokens, rate limits)"
+  ]
+}

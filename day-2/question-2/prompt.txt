@@ -1,0 +1,59 @@
+You are a Snowflake SQL expert specializing in data quality and deduplication.
+
+CONTEXT:
+Your data team discovered that the orders table has duplicates - some customers have multiple identical order rows. You need to deduplicate to keep only the LATEST order per customer using CTEs and QUALIFY.
+
+TASK:
+Write a SQL query using a CTE and QUALIFY to deduplicate orders, keeping only the most recent order per customer.
+
+REQUIREMENTS:
+1. Create a CTE named "latest_orders"
+2. Use QUALIFY with ROW_NUMBER() to filter rows
+3. PARTITION BY customer_id to group customers
+4. ORDER BY order_date DESC to put newest first
+5. QUALIFY ROW_NUMBER() = 1 to keep only rank 1
+6. Return: customer_id, order_id, order_date, amount
+7. CTE should select from: bootcamp_db.training.orders
+
+KEY CONCEPTS:
+- CTE (Common Table Expression): Named result set you can reference
+- QUALIFY: Filters AFTER window function calculation (unlike WHERE)
+- ROW_NUMBER(): Assigns 1, 2, 3... within partition
+- ROW_NUMBER() = 1: First row in partition (most recent if ordered by date DESC)
+- PARTITION BY: Groups rows by customer_id
+- ORDER BY DESC: Newest dates first
+
+STRUCTURE:
+WITH cte_name AS (
+  SELECT ... FROM ...
+  QUALIFY window_function_condition
+)
+SELECT * FROM cte_name;
+
+EXAMPLE:
+WITH latest_orders AS (
+  SELECT
+    customer_id,
+    order_id,
+    order_date,
+    amount
+  FROM bootcamp_db.training.orders
+  QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY customer_id
+    ORDER BY order_date DESC
+  ) = 1
+)
+SELECT * FROM latest_orders
+ORDER BY customer_id;
+
+EXPECTED BEHAVIOR:
+- One row per unique customer (no duplicates)
+- Each row is that customer's most recent order
+- Results show: customer_id, order_id (most recent), order_date (most recent), amount
+
+DELIVERABLES:
+1. Generate complete SQL with comments
+2. Explain what the CTE does (filters to latest per customer)
+3. Explain QUALIFY vs WHERE (filters window function results)
+4. Explain why ORDER BY DESC puts newest first
+5. Show that duplicates are removed (each customer appears once)

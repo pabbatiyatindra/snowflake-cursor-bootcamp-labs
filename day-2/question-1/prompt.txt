@@ -1,0 +1,50 @@
+You are a Snowflake SQL expert teaching window functions for data analysis.
+
+CONTEXT:
+Your company tracks orders and wants to rank customers by spending within each month to identify top spenders.
+
+TASK:
+Write a SQL query that ranks customers by their total spending within each month using window functions.
+
+REQUIREMENTS:
+1. Use orders table: bootcamp_db.training.orders with columns: order_id, customer_id, order_date, amount
+2. Aggregate spending by customer_id and month (use DATE_TRUNC('month', order_date))
+3. Rank customers within each month by total_spent using ROW_NUMBER()
+4. PARTITION BY month, ORDER BY total_spent DESC
+5. Show: customer_id, order_month, total_spent, rank
+6. Order final results by month DESC, then rank ASC
+7. Limit to top 10 results
+
+KEY CONCEPTS:
+- Window functions calculate over groups WITHOUT collapsing rows
+- PARTITION BY divides rows into logical groups
+- ORDER BY inside window function determines ranking order
+- ROW_NUMBER() assigns 1, 2, 3... within each partition
+
+EXAMPLE PATTERN:
+SELECT
+  customer_id,
+  DATE_TRUNC('month', order_date) as order_month,
+  SUM(amount) as total_spent,
+  ROW_NUMBER() OVER (
+    PARTITION BY DATE_TRUNC('month', order_date)
+    ORDER BY SUM(amount) DESC
+  ) as rank
+FROM bootcamp_db.training.orders
+GROUP BY 1, 2
+ORDER BY order_month DESC, rank ASC
+LIMIT 10
+
+EXPECTED OUTPUT:
+Rows should show:
+- Each customer per month (if they have orders)
+- Rank starting at 1 for highest spender in that month
+- Rank resets for each new month
+- Total of 10 rows (or fewer if less than 10 customer-month combinations)
+
+DELIVERABLE:
+1. Generate complete SQL with comments explaining each section
+2. Explain what PARTITION BY does (divides into groups)
+3. Explain why ORDER BY DESC gives rank 1 to highest (first in order)
+4. Explain why window functions preserve all rows (vs GROUP BY which collapses)
+5. Run the query and show the results

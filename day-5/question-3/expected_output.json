@@ -1,0 +1,51 @@
+{
+  "task_description": "Classify review sentiment and analyze patterns",
+  "expected_sentiment_table": {
+    "columns": ["review_id", "review_text", "sentiment", "confidence", "reason"],
+    "sentiment_values": ["POSITIVE", "NEGATIVE", "NEUTRAL"],
+    "confidence_range": "0.0-1.0"
+  },
+  "expected_product_summary": {
+    "columns": ["product_id", "total_reviews", "positive_pct", "negative_pct", "neutral_pct"],
+    "expectations": {
+      "total_reviews": "count of reviews per product",
+      "positive_pct": "COUNTIF(sentiment='POSITIVE') / COUNT(*) * 100",
+      "negative_pct": "COUNTIF(sentiment='NEGATIVE') / COUNT(*) * 100"
+    }
+  },
+  "validation_rules": [
+    "Must use SNOWFLAKE.CORTEX.COMPLETE() for classification",
+    "Must request JSON response format",
+    "Must use TRY_PARSE_JSON() to extract fields",
+    "Sentiment must be POSITIVE, NEGATIVE, or NEUTRAL",
+    "Confidence must be float between 0.0 and 1.0",
+    "Must create review_sentiment table",
+    "Must aggregate by product_id",
+    "Percentages must sum to 100% (or close, with rounding)",
+    "Results must be ordered by negative percentage DESC"
+  ],
+  "sample_sentiment_results": [
+    {
+      "review_text": "Great shoes, very comfortable!",
+      "expected_sentiment": "POSITIVE",
+      "expected_confidence_range": "0.85-0.95"
+    },
+    {
+      "review_text": "Poor quality, broke after one week",
+      "expected_sentiment": "NEGATIVE",
+      "expected_confidence_range": "0.80-0.95"
+    },
+    {
+      "review_text": "The product has blue color",
+      "expected_sentiment": "NEUTRAL",
+      "expected_confidence_range": "0.60-0.80"
+    }
+  ],
+  "concepts_tested": [
+    "Cortex COMPLETE for text classification",
+    "JSON parsing with TRY_PARSE_JSON",
+    "Conditional aggregation with COUNTIF",
+    "Percentage calculations",
+    "Product-level sentiment analysis"
+  ]
+}

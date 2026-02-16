@@ -1,0 +1,37 @@
+{
+  "task_description": "Generate embeddings and perform semantic similarity search",
+  "expected_outputs": {
+    "embeddings_table": {
+      "columns": ["review_id", "review_text", "embedding_vector"],
+      "vector_dimensions": 768
+    },
+    "similarity_search": {
+      "columns": ["review_id", "similar_review_id", "similarity_score"],
+      "expected_rows": 3,
+      "similarity_range": "0.0-1.0"
+    }
+  },
+  "validation_rules": [
+    "Must use SNOWFLAKE.CORTEX.EMBED_TEXT_768('multilingual-e5-large', text)",
+    "Must create embeddings table with review_id, review_text, embedding_vector",
+    "Must use VECTOR_COSINE_SIMILARITY(vec1, vec2) for comparison",
+    "Must find top 3 similar reviews (exclude review comparing to itself)",
+    "Must order by similarity DESC",
+    "Similarity scores must be in 0.0-1.0 range",
+    "Must implement semantic search for arbitrary text query",
+    "Results must show meaningful similarity patterns"
+  ],
+  "semantic_expectations": {
+    "positive_reviews": "Should have high similarity to each other (>0.7)",
+    "negative_reviews": "Should have low similarity to positive (0.2-0.4)",
+    "same_topic": "Similar topics should cluster together"
+  },
+  "concepts_tested": [
+    "Cortex embedding generation",
+    "Vector storage and retrieval",
+    "Cosine similarity calculation",
+    "Semantic search implementation",
+    "Recommendation systems",
+    "Performance optimization with caching"
+  ]
+}

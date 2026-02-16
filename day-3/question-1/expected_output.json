@@ -1,0 +1,46 @@
+{
+  "task_description": "Transform customer data using Snowpark DataFrames",
+  "expected_columns": [
+    "CUSTOMER_ID",
+    "CUSTOMER_NAME",
+    "REGION",
+    "SIGNUP_DATE",
+    "SIGNUP_YEAR"
+  ],
+  "expected_rows": 2,
+  "expected_data_sample": [
+    {
+      "CUSTOMER_ID": 1,
+      "CUSTOMER_NAME": "ALICE",
+      "REGION": "US-WEST",
+      "SIGNUP_YEAR": 2023
+    },
+    {
+      "CUSTOMER_ID": 4,
+      "CUSTOMER_NAME": "DIANA",
+      "REGION": "US-WEST",
+      "SIGNUP_YEAR": 2023
+    }
+  ],
+  "validation_rules": [
+    "Code must create Snowpark Session",
+    "Must load customers table from bootcamp_db.training.customers",
+    "Must filter to region == 'US-West' (case insensitive)",
+    "Must select the 5 columns shown",
+    "Must add signup_year column using year() function",
+    "Must call .show() or .collect() to display results",
+    "Results must have exactly 2 rows",
+    "signup_year values must be 2023",
+    "No NULL values in key columns"
+  ],
+  "concepts_tested": [
+    "Session creation and connection",
+    "Loading tables with session.table()",
+    "DataFrame filtering with .filter()",
+    "Column selection with .select()",
+    "Calculated columns with .withColumn()",
+    "Date functions like year()",
+    "Method chaining",
+    "Lazy evaluation"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "task_description": "Create and register a Snowpark UDF for calculating customer lifetime value",
+  "expected_columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "TOTAL_SPEND", "LIFETIME_VALUE"],
+  "expected_rows": 3,
+  "expected_logic": {
+    "tier_multiplier": {
+      "over_1000": 1.2,
+      "over_500": 1.1,
+      "default": 1.0
+    },
+    "examples": [
+      {"customer_id": 1, "total_spend": 1000.0, "multiplier": 1.1, "ltv": 1100.0},
+      {"customer_id": 2, "total_spend": 250.0, "multiplier": 1.0, "ltv": 250.0},
+      {"customer_id": 3, "total_spend": 5000.0, "multiplier": 1.2, "ltv": 6000.0}
+    ]
+  },
+  "validation_rules": [
+    "Code must define Python function with @udf decorator",
+    "Must have type hints for parameters and return value",
+    "Must query orders table inside UDF",
+    "Must implement tier multiplier logic correctly",
+    "Must handle NULL results from SUM()",
+    "Must register with session.udf.register()",
+    "Must use UDF in SELECT query",
+    "Results must show lifetime_value calculations",
+    "Tier multipliers must be applied correctly"
+  ],
+  "concepts_tested": [
+    "UDF definition with @udf decorator",
+    "Type hints and type system",
+    "Querying from within UDF",
+    "Business logic implementation",
+    "NULL value handling",
+    "UDF registration",
+    "SQL integration with UDFs"
+  ]
+}

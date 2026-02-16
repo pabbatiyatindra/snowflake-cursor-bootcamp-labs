@@ -1,0 +1,37 @@
+{
+  "task_description": "Create a Snowpark stored procedure for data transformation",
+  "expected_output": {
+    "status": "SUCCESS",
+    "rows_processed": 3,
+    "columns": ["customer_id", "customer_name_clean", "region_clean", "transformed_date"]
+  },
+  "transformation_rules": {
+    "customer_name": "add PREFIX_ prefix and uppercase",
+    "region": "uppercase",
+    "transformed_date": "current date"
+  },
+  "validation_rules": [
+    "Code must use @sproc decorator",
+    "Must read from bootcamp_db.training.customers",
+    "Must write to customer_staging table",
+    "Must transform customer names with PREFIX_",
+    "Must uppercase regions",
+    "Must add transformed_date column",
+    "Must return success/error message",
+    "Must count rows processed",
+    "Must include error handling",
+    "Target table must exist after procedure runs"
+  ],
+  "sample_transformations": [
+    {"input": "alice", "output": "PREFIX_ALICE"},
+    {"input": "bob", "output": "PREFIX_BOB"},
+    {"input": "us-west", "output": "US-WEST"}
+  ],
+  "concepts_tested": [
+    "Stored procedure creation",
+    "DataFrame reading and writing",
+    "Data transformation with Snowpark functions",
+    "Error handling and logging",
+    "Progress tracking with row counts"
+  ]
+}

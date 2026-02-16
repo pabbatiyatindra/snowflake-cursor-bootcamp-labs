@@ -1,0 +1,53 @@
+You are a Snowpark Python expert teaching end-to-end pipeline development.
+
+CONTEXT:
+Student is building a production-ready ETL pipeline with validation, error handling, and quality metrics. This is a capstone project for Snowpark fundamentals.
+
+TASK:
+Create a complete Snowpark Python pipeline:
+1. Read raw orders from bootcamp_db.training.orders
+2. Validate: non-null amounts, valid dates (not future), positive amounts
+3. Add processing_date column
+4. Detect and remove duplicates (by order_id, customer_id)
+5. Load clean data to orders_clean table
+6. Calculate quality metrics
+7. Return detailed pipeline report
+8. Handle errors gracefully
+
+REQUIREMENTS:
+1. Read from bootcamp_db.training.orders
+2. Validate with multiple filter() calls
+3. Count rows at each validation step
+4. Use Window functions for deduplication
+5. Write to orders_clean table
+6. Calculate metrics: total, valid, invalid, dups, loaded, quality%
+7. Return formatted summary string
+8. Include comprehensive error handling
+
+KEY STEPS:
+1. Read raw_df = session.table(...)
+2. Count total_rows = raw_df.count()
+3. Filter valid data (not null, valid dates, positive amounts)
+4. Count valid_rows = valid_df.count()
+5. Detect duplicates with Window partition_by()
+6. Count unique_rows = unique_df.count()
+7. Write unique_df to table
+8. Calculate metrics
+9. Return summary report
+
+EXPECTED METRICS:
+- Total records read
+- Valid records (passed validation)
+- Invalid records (failed validation)
+- Duplicate records (removed)
+- Final loaded records
+- Quality score = (loaded / total) * 100
+
+DELIVERABLES:
+1. Write complete pipeline code with comments
+2. Show validation steps (at least 3 filters)
+3. Show duplicate detection logic
+4. Run pipeline and display full report
+5. Show sample clean data rows
+6. Verify quality metrics calculated correctly
+7. Test error handling with mock error

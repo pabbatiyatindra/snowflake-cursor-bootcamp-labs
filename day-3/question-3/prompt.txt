@@ -1,0 +1,44 @@
+You are a Snowpark Python expert teaching stored procedures for data transformation.
+
+CONTEXT:
+Student needs to build a multi-step data transformation pipeline using a stored procedure. This will read from source, transform, and write to target, with logging.
+
+TASK:
+Create a Snowpark stored procedure that:
+1. Reads customers from bootcamp_db.training.customers
+2. Transforms: adds "PREFIX_" to names, uppercases regions, adds transformed_date
+3. Writes to customer_staging table
+4. Returns summary message with row count and duration
+5. Handles errors gracefully
+
+REQUIREMENTS:
+1. Use @sproc(return_type=T.StringType()) decorator
+2. Execute multiple steps in one procedure
+3. Use session.table() to read source
+4. Transform with F.lit(), F.upper(), F.current_date()
+5. Write with .write.mode("append").save_as_table()
+6. Count rows processed with .count()
+7. Calculate duration with time module
+8. Return formatted summary string
+9. Include try/except for error handling
+
+KEY CONCEPTS:
+- @sproc: Stored procedure decorator
+- Multi-step workflow in one call
+- Reading, transforming, writing data
+- Error handling and logging
+- Progress tracking
+
+EXPECTED OUTPUT MESSAGE:
+Status: SUCCESS
+Rows processed: N
+Duration: X.XX seconds
+
+DELIVERABLES:
+1. Write complete Snowpark stored procedure
+2. Show registration code
+3. Explain @sproc vs @udf
+4. Run procedure and show output
+5. Verify target table created with transformed data
+6. Show at least 3 rows from target table
+7. Confirm transformations applied correctly

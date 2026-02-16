@@ -1,0 +1,46 @@
+{
+  "pipeline_description": "End-to-end ETL pipeline with validation, deduplication, and quality metrics",
+  "expected_metrics": {
+    "total_records_read": 4,
+    "valid_records": 3,
+    "invalid_records": 1,
+    "duplicate_records": 1,
+    "final_loaded": 2,
+    "quality_percentage": 50
+  },
+  "validation_rules": [
+    "amount IS NOT NULL",
+    "order_date <= CURRENT_DATE",
+    "amount > 0"
+  ],
+  "deduplication": "Window function partition by order_id, customer_id, ROW_NUMBER() = 1",
+  "output_table": "orders_clean",
+  "expected_report_sections": [
+    "Total records read",
+    "Valid records",
+    "Invalid records",
+    "Duplicate records",
+    "Final loaded records",
+    "Quality score percentage",
+    "Pipeline status (SUCCESS/FAILED)"
+  ],
+  "validation_rules_list": [
+    "Must read from bootcamp_db.training.orders",
+    "Must validate data (at least 3 filter conditions)",
+    "Must detect duplicates using Window functions",
+    "Must write to orders_clean table",
+    "Must calculate quality metrics",
+    "Must return formatted report string",
+    "Must include error handling",
+    "Final loaded rows must be correct",
+    "Quality score calculation must be accurate"
+  ],
+  "concepts_tested": [
+    "Complete ETL pipeline structure",
+    "Multiple validation filters",
+    "Window function usage for deduplication",
+    "Error handling and recovery",
+    "Quality metrics and reporting",
+    "Data transformation and loading"
+  ]
+}

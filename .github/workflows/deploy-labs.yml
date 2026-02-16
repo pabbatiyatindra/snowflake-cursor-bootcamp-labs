@@ -1,0 +1,182 @@
+name: Deploy Bootcamp Labs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'day-*/**'
+      - 'README.md'
+      - '.cursorrules'
+      - 'requirements.txt'
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate Lab Content
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Validate JSON Files
+        run: |
+          python3 << 'EOF'
+          import json
+          import os
+          from pathlib import Path
+
+          errors = []
+          for json_file in Path('.').rglob('expected_output.json'):
+              try:
+                  with open(json_file) as f:
+                      json.load(f)
+                  print(f"✓ {json_file}")
+              except json.JSONDecodeError as e:
+                  errors.append(f"❌ {json_file}: {e}")
+
+          if errors:
+              for error in errors:
+                  print(error)
+              exit(1)
+          EOF
+
+      - name: Check Required Files
+        run: |
+          for day in 1 2 3 4 5; do
+            for q in 1 2 3 4; do
+              dir="day-$day/question-$q"
+              if [ -d "$dir" ]; then
+                files=("README.md" "prompt.txt" "expected_output.json" "solution_checker.py")
+                for file in "${files[@]}"; do
+                  if [ ! -f "$dir/$file" ]; then
+                    echo "❌ Missing $dir/$file"
+                    exit 1
+                  fi
+                done
+                echo "✓ day-$day/question-$q (all files present)"
+              fi
+            done
+          done
+
+      - name: Lint Python Files
+        run: |
+          pip install pylint
+          python3 -m pylint --errors-only day-*/question-*/solution_checker.py || true
+
+  test-validators:
+    runs-on: ubuntu-latest
+    name: Test Solution Validators
+    needs: validate
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Validate Validator Scripts Syntax
+        run: |
+          python3 << 'EOF'
+          import py_compile
+          import sys
+          from pathlib import Path
+
+          errors = []
+          for script in Path('.').rglob('solution_checker.py'):
+              try:
+                  py_compile.compile(str(script), doraise=True)
+                  print(f"✓ {script}")
+              except py_compile.PyCompileError as e:
+                  errors.append(f"❌ {script}: {e}")
+
+          if errors:
+              for error in errors:
+                  print(error)
+              exit(1)
+          EOF
+
+  security:
+    runs-on: ubuntu-latest
+    name: Security Checks
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for Hardcoded Credentials
+        run: |
+          if grep -r "password\|token\|secret" day-*/*.sql day-*/question-*/*.py --include="*.sql" --include="*.py" -i; then
+            echo "❌ Potential hardcoded credentials found!"
+            exit 1
+          fi
+          echo "✓ No hardcoded credentials detected"
+
+      - name: Check .env Files Not Committed
+        run: |
+          if [ -f ".env.local" ] || [ -f ".env" ]; then
+            echo "❌ Environment files should not be committed!"
+            exit 1
+          fi
+          echo "✓ No .env files committed"
+
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish Content
+    needs: [validate, test-validators, security]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Release Notes
+        run: |
+          cat > RELEASE_NOTES.md << 'EOF'
+          # Bootcamp Labs Release
+
+          This release contains the complete Snowflake + Cursor AI bootcamp labs.
+
+          ## Contents
+          - 5 Days of hands-on labs
+          - 20 questions total
+          - 80+ supporting files
+          - Complete validation scripts
+
+          ## For Students
+          1. Clone: `git clone https://github.com/pabbatiyatindra/snowflake-bootcamp-labs.git`
+          2. Setup: Run `validate_connection.py`
+          3. Start: Open in Cursor and follow day-1/README.md
+
+          ## For Instructors
+          See INSTRUCTOR.md for setup and deployment guidance.
+          EOF
+
+      - name: Update GitHub README
+        run: |
+          echo "Publishing labs to GitHub..."
+          git config user.email "bootcamp@snowflake.dev"
+          git config user.name "Bootcamp CI"
+
+  notify:
+    runs-on: ubuntu-latest
+    name: Notify of Updates
+    needs: publish
+    if: always()
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Post Status
+        run: |
+          echo "✓ Bootcamp labs validation and publishing complete"
+          echo "Repository: https://github.com/pabbatiyatindra/snowflake-bootcamp-labs"

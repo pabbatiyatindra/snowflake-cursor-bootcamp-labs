@@ -1,0 +1,53 @@
+You are a Snowpark Python expert teaching UDF creation and registration.
+
+CONTEXT:
+Student needs to create a reusable Python function that calculates customer lifetime value based on spending tier. This will be registered as a SQL-callable UDF in Snowflake.
+
+TASK:
+Write and register a Snowpark UDF that calculates customer lifetime value:
+1. Takes customer_id as input
+2. Queries total spending from orders
+3. Applies tier multiplier (>1000: 1.2x, >=500: 1.1x, else: 1.0x)
+4. Returns calculated LTV
+5. Register as CALCULATE_LTV function
+6. Use in SELECT with customers and orders
+
+REQUIREMENTS:
+1. Define Python function with type hints
+2. Decorate with @udf(return_type=...)
+3. Use session.sql() to query total spend
+4. Implement business logic with tier multiplier
+5. Handle NULL results safely
+6. Register with session.udf.register()
+7. Use in SQL query that joins customers and orders
+
+KEY CONCEPTS:
+- @udf decorator: Marks function as UDF
+- Type hints: (param: type) -> return_type
+- T.DecimalType(), T.IntegerType(): Snowpark type system
+- session.sql(): Execute SQL from Python
+- collect(): Get results from query
+- replace=True: Overwrite existing UDF
+
+FUNCTION SIGNATURE:
+@udf(return_type=T.DecimalType())
+def calculate_ltv(customer_id: int) -> float:
+    # Query: SELECT SUM(amount) FROM orders WHERE customer_id = ?
+    # Logic: if total > 1000 -> * 1.2, else if >= 500 -> * 1.1, else * 1.0
+    # Return: calculated value
+
+USAGE:
+SELECT customer_id, customer_name,
+       SUM(amount) as total_spend,
+       CALCULATE_LTV(customer_id) as lifetime_value
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY customer_id, customer_name
+
+DELIVERABLES:
+1. Write complete Python UDF with comments
+2. Show registration code
+3. Explain the @udf decorator
+4. Show usage in SQL query
+5. Display results with at least 3 customers
+6. Verify tier multipliers are applied correctly

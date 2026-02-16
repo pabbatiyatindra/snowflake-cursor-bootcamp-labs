@@ -1,0 +1,52 @@
+{
+  "query_description": "Analyze query execution plans using EXPLAIN to identify optimization opportunities",
+  "business_context": "Understand query performance to optimize slow data warehouse queries and reduce compute costs",
+  "expected_analysis": {
+    "query_1_unoptimized": {
+      "description": "SELECT * FROM bootcamp_db.training.orders WHERE amount > 100",
+      "expected_characteristics": [
+        "Full table scan (sequential or large portion)",
+        "Higher cost estimate",
+        "Larger number of rows processed"
+      ]
+    },
+    "query_2_optimized": {
+      "description": "SELECT * FROM bootcamp_db.training.orders WHERE amount > 100 AND customer_id > 0",
+      "expected_characteristics": [
+        "More selective filtering",
+        "Lower or equal cost compared to Query 1",
+        "Potentially partition pruning"
+      ]
+    }
+  },
+  "validation_rules": [
+    "Both EXPLAIN statements must execute successfully",
+    "Query 1 must be simpler (single filter)",
+    "Query 2 must have additional WHERE conditions",
+    "Student must compare costs between the two plans",
+    "Student must identify which query is more optimized",
+    "Analysis should note scan type differences",
+    "Should explain why additional filters help or don't help",
+    "No syntax errors in either query"
+  ],
+  "interpretation_guide": {
+    "cost_metric": "Higher cost = more compute resources required = slower execution",
+    "scan_types": {
+      "sequential_scan": "Reads all data blocks (unoptimized for large tables)",
+      "partition_prune": "Reads only relevant partitions (optimized, faster)",
+      "table_scan": "Standard full table scan"
+    },
+    "optimization_signals": [
+      "Presence of partition pruning in plan",
+      "Lower cost estimate vs unoptimized version",
+      "Fewer rows processed in earlier stages"
+    ]
+  },
+  "common_mistakes": [
+    "Running EXPLAIN on same query twice (no comparison)",
+    "Not comparing the cost numbers",
+    "Misunderstanding that EXPLAIN doesn't execute query",
+    "Confusing Rows with Cost (different metrics)",
+    "Not identifying which query is more optimized"
+  ]
+}

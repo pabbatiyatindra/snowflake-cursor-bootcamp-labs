@@ -1,0 +1,53 @@
+{
+  "query_description": "Optimize a complex slow query using CTEs, window functions, and efficient joins",
+  "business_context": "Refactor slow analytics query to run efficiently on large datasets while maintaining identical results",
+  "optimization_goals": [
+    "Replace SELECT subqueries with window functions",
+    "Replace WHERE EXISTS with CTE + JOIN",
+    "Pre-calculate aggregates once in CTE",
+    "Maintain identical results",
+    "Improve execution performance"
+  ],
+  "expected_output_columns": [
+    "order_id",
+    "customer_id",
+    "customer_name",
+    "amount",
+    "lifetime_orders",
+    "overall_rank"
+  ],
+  "validation_rules": [
+    "Optimized query must return same columns as original",
+    "Number of rows must match original query",
+    "Data values must be identical (not just count)",
+    "Must use at least one CTE",
+    "Must use window functions (not SELECT subqueries)",
+    "Should not use correlated subqueries in WHERE",
+    "Must join with customers table",
+    "No syntax errors when running optimized query"
+  ],
+  "performance_expectations": {
+    "optimization_areas": [
+      "Removes SELECT subquery that runs per row",
+      "Replaces EXISTS with pre-calculated CTE",
+      "Uses CTEs to aggregate data once",
+      "Uses window functions for per-customer calculations"
+    ],
+    "estimated_improvement": "50-80% faster on large datasets (1M+ rows)"
+  },
+  "common_mistakes": [
+    "Using SELECT subquery instead of window function",
+    "Not using PARTITION BY in window function",
+    "Using correlated subquery in WHERE still",
+    "Calculating aggregates in main SELECT instead of CTE",
+    "Not filtering based on CTE results",
+    "Producing duplicate rows in results"
+  ],
+  "validation_approach": {
+    "step_1": "Run original slow query and count rows",
+    "step_2": "Run optimized query and verify row count matches",
+    "step_3": "Compare sample rows to verify data correctness",
+    "step_4": "Run EXPLAIN on both queries",
+    "step_5": "Note cost difference (optimized should be lower)"
+  }
+}

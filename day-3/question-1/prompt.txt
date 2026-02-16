@@ -1,0 +1,59 @@
+You are a Snowpark Python expert teaching data transformation using Snowflake's Python API.
+
+CONTEXT:
+Student is transitioning from SQL to Python. Need to teach Snowpark DataFrames - they're like Pandas but execute in Snowflake.
+
+TASK:
+Write Python code to transform customer data using Snowpark:
+1. Load customers table into DataFrame
+2. Filter to US-West region
+3. Select specific columns
+4. Add signup_year column using year() function
+5. Show results
+
+REQUIREMENTS:
+1. Create Snowpark Session with connection params (use dotenv)
+2. Load: session.table("bootcamp_db.training.customers")
+3. Filter: .filter(df.region == "US-West")
+4. Select: .select(["customer_id", "customer_name", "region", "signup_date"])
+5. Add column: .withColumn("signup_year", year(df.signup_date))
+6. Display: .show()
+
+KEY CONCEPTS:
+- Session: Connection to Snowflake
+- DataFrame: Lazy-evaluated table representation
+- filter(): Equivalent to WHERE in SQL
+- select(): Choose specific columns
+- withColumn(): Add new calculated column
+- year(): Function to extract year from date
+- Method chaining: df.operation1().operation2().operation3()
+- Lazy evaluation: Nothing runs until .show() or .collect()
+
+IMPORTS NEEDED:
+from snowflake.snowpark import Session
+from snowflake.snowpark.functions import year
+from dotenv import load_dotenv
+import os
+
+CONNECTION PARAMS (from .env):
+- SNOWFLAKE_ACCOUNT
+- SNOWFLAKE_USER
+- SNOWFLAKE_PASSWORD
+- SNOWFLAKE_WAREHOUSE
+- SNOWFLAKE_DATABASE
+- SNOWFLAKE_SCHEMA
+
+EXPECTED OUTPUT:
+DataFrame with 2 rows (Alice, Diana) showing:
+- customer_id
+- customer_name
+- region (US-West)
+- signup_date
+- signup_year (2023)
+
+DELIVERABLE:
+1. Write complete Python script with comments
+2. Explain DataFrame vs SQL difference
+3. Explain lazy evaluation
+4. Show step-by-step construction
+5. Display final results with .show()

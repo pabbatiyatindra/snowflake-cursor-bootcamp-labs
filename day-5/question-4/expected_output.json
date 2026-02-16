@@ -1,0 +1,70 @@
+{
+  "project_description": "AI-Enriched Product Intelligence Platform Capstone",
+  "expected_phases": {
+    "phase_1_data_prep": "Cleaned data tables, validated rows",
+    "phase_2_ai_enrichment": [
+      "product_descriptions table (COMPLETE)",
+      "enriched_reviews table (sentiment classification)",
+      "review_embeddings table (semantic vectors)"
+    ],
+    "phase_3_analytics": "product_intelligence table with aggregations",
+    "phase_4_dashboard": [
+      "Top performing products query",
+      "Products needing attention query",
+      "Semantic search implementation"
+    ]
+  },
+  "expected_tables": {
+    "product_descriptions": {
+      "columns": ["product_id", "product_name", "ai_description"]
+    },
+    "enriched_reviews": {
+      "columns": ["review_id", "product_id", "review_text", "sentiment", "confidence"]
+    },
+    "review_embeddings": {
+      "columns": ["review_id", "product_id", "review_text", "embedding_vector"]
+    },
+    "product_intelligence": {
+      "columns": [
+        "product_id",
+        "product_name",
+        "total_reviews",
+        "positive_pct",
+        "negative_pct",
+        "avg_confidence",
+        "issue_severity"
+      ]
+    }
+  },
+  "validation_rules": [
+    "Must clean and validate data (Phase 1)",
+    "Must create product_descriptions table (COMPLETE)",
+    "Must classify sentiment on all reviews (COMPLETE + JSON)",
+    "Must generate embeddings for at least 5 reviews (EMBED_TEXT_768)",
+    "Must aggregate sentiment by product (percentages)",
+    "Must calculate avg_confidence per product",
+    "Must classify issue_severity (HIGH/MEDIUM/LOW)",
+    "Must create 2+ dashboard queries",
+    "No NULL values in key aggregation columns",
+    "Sentiment percentages must sum to ~100%"
+  ],
+  "capabilities_demonstrated": [
+    "SQL data cleaning and validation",
+    "Cortex COMPLETE for content generation",
+    "Cortex COMPLETE for sentiment classification",
+    "JSON parsing and extraction",
+    "Cortex EMBED_TEXT_768 for vectors",
+    "Complex aggregation queries",
+    "Window functions (if deduplication needed)",
+    "CASE statements for categorization",
+    "Multi-table JOINs",
+    "Business logic implementation"
+  ],
+  "business_value": {
+    "for_product_teams": "Know which products have quality issues",
+    "for_marketing": "Identify positive sentiment keywords for campaigns",
+    "for_support": "Priority issues to address per product",
+    "for_executives": "Product performance at a glance"
+  },
+  "complexity_level": "Advanced - integrates all bootcamp concepts"
+}

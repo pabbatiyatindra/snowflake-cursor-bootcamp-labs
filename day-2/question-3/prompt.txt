@@ -1,0 +1,49 @@
+You are a Snowflake performance optimization expert teaching query analysis.
+
+CONTEXT:
+A slow query is taking too long to execute. Before optimization, you need to understand Snowflake's execution plan to identify the bottleneck. The EXPLAIN command shows how Snowflake will execute the query.
+
+TASK:
+Use EXPLAIN to analyze and compare two queries - one unoptimized (full scan) and one optimized (with pruning).
+
+REQUIREMENTS:
+1. Run EXPLAIN on Query 1 (unoptimized):
+   SELECT * FROM bootcamp_db.training.orders
+   WHERE amount > 100;
+
+2. Run EXPLAIN on Query 2 (optimized):
+   SELECT * FROM bootcamp_db.training.orders
+   WHERE amount > 100
+     AND customer_id > 0;
+
+3. Compare the execution plans:
+   - Note the cost estimates (higher = slower)
+   - Look for "Sequential Scan" vs "Partition Prune"
+   - Check rows processed by each plan
+   - Identify which is more efficient
+
+KEY CONCEPTS:
+- EXPLAIN: Shows query execution plan without running query
+- Cost: Estimated resource usage (CPU, memory, I/O)
+- Rows: Number of rows processed by operation
+- Sequential Scan: Reads all data blocks
+- Partition Prune: Reads only relevant data blocks (faster)
+- Sargable: Predicates that allow partition pruning
+
+EXPECTED PATTERNS:
+Query 1 (unoptimized):
+- Higher total cost
+- May show "Sequential Scan"
+- More rows processed initially
+
+Query 2 (optimized):
+- Lower cost (maybe not much, but better)
+- Better predicate pushdown
+- More selective filtering
+
+DELIVERABLES:
+1. Show EXPLAIN output for both queries
+2. Compare the cost numbers
+3. Identify which operations are expensive
+4. Explain why Query 2 is more optimized
+5. Suggest one optimization (filter on column that enables pruning)

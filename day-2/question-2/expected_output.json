@@ -1,0 +1,51 @@
+{
+  "query_description": "Deduplicate orders using CTE with QUALIFY and ROW_NUMBER()",
+  "business_context": "Remove duplicate order records, keeping only the most recent order per customer for accurate reporting",
+  "expected_columns": [
+    {
+      "name": "CUSTOMER_ID",
+      "type": "INTEGER",
+      "description": "Unique customer identifier"
+    },
+    {
+      "name": "ORDER_ID",
+      "type": "INTEGER",
+      "description": "Unique order identifier (most recent for this customer)"
+    },
+    {
+      "name": "ORDER_DATE",
+      "type": "DATE",
+      "description": "Date of the order (most recent for this customer)"
+    },
+    {
+      "name": "AMOUNT",
+      "type": "DECIMAL(10,2)",
+      "description": "Order amount"
+    }
+  ],
+  "validation_rules": [
+    "Query must use WITH...AS CTE syntax",
+    "CTE name should be 'latest_orders' or similar",
+    "Must use QUALIFY clause with ROW_NUMBER()",
+    "QUALIFY condition must be: ROW_NUMBER() ... = 1",
+    "PARTITION BY customer_id is required",
+    "ORDER BY order_date DESC inside window function",
+    "One row per unique customer (no duplicates)",
+    "Each row represents that customer's most recent order",
+    "No NULL values in customer_id, order_id, or order_date",
+    "Results can be ordered by customer_id or any column"
+  ],
+  "deduplication_check": {
+    "rule": "SELECT COUNT(DISTINCT customer_id) = COUNT(*)",
+    "meaning": "Number of distinct customers equals number of rows (one row per customer)"
+  },
+  "common_mistakes": [
+    "Using WHERE instead of QUALIFY (WHERE executes before window functions)",
+    "Forgetting CTE WITH keyword or not using CTE in main SELECT",
+    "ORDER BY order_date ASC instead of DESC (oldest instead of newest)",
+    "Missing PARTITION BY customer_id (ranks all orders, not per customer)",
+    "Using RANK() or DENSE_RANK() instead of ROW_NUMBER() (less predictable with ties)",
+    "Filtering on ROW_NUMBER() > 1 instead of = 1 (returns wrong rows)",
+    "Not including ORDER BY in main SELECT (results may not be sorted)"
+  ]
+}

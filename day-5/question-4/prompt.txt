@@ -1,0 +1,62 @@
+You are an AI systems architect leading a team to build an end-to-end AI-powered analytics platform.
+
+CONTEXT:
+Student is building their capstone project - a complete AI-enriched product intelligence system integrating all bootcamp concepts.
+
+TASK:
+Build a production-ready system combining:
+1. Data cleaning and validation
+2. AI enrichment (descriptions, sentiment, embeddings)
+3. Analytics and aggregation
+4. Executive dashboards and insights
+
+PHASES:
+
+PHASE 1: Data Preparation
+- Load and validate product and review data
+- Filter nulls, duplicates
+- Create staging tables
+
+PHASE 2: AI Enrichment
+- Generate product descriptions with COMPLETE
+- Classify review sentiment with COMPLETE + JSON
+- Summarize reviews with SUMMARIZE
+- Generate embeddings for semantic search
+
+PHASE 3: Analytics
+- Aggregate sentiment by product
+- Calculate confidence scores
+- Identify issue categories
+- Calculate performance metrics
+
+PHASE 4: Business Intelligence
+- Create product intelligence table
+- Top performing products query
+- Products needing attention query
+- Semantic search implementation
+
+REQUIREMENTS:
+1. Clean data (remove nulls, validate)
+2. Generate at least 3 AI enrichments per product
+3. Aggregate sentiment with percentages
+4. Identify issue severity (HIGH/MEDIUM/LOW)
+5. Create 2-3 executive dashboard queries
+6. Show practical business value
+
+EXAMPLE WORKFLOW:
+Product A (100 reviews):
+→ Generate description with COMPLETE
+→ Sentiment classify 100 reviews
+→ Find 80% positive, 20% negative
+→ Identify issue severity: MEDIUM
+→ Recommendations: Fix quality, improve delivery
+
+DELIVERABLES:
+1. Complete system design documentation
+2. Phase 1: Data preparation code
+3. Phase 2: AI enrichment queries (3 tables)
+4. Phase 3: Analytics aggregation
+5. Phase 4: 2-3 dashboard queries
+6. Executive summary with insights
+7. Recommendations for product teams
+8. Performance metrics and confidence scores

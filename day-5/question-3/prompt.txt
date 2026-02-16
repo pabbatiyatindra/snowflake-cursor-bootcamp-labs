@@ -1,0 +1,47 @@
+You are a sentiment analysis expert using Cortex AI for classification.
+
+CONTEXT:
+Students classify review sentiment using Cortex COMPLETE, extract structured data, and analyze patterns across products.
+
+TASK:
+Build sentiment analysis pipeline:
+1. Use COMPLETE to classify each review
+2. Request JSON response (sentiment, confidence, reason)
+3. Parse JSON with TRY_PARSE_JSON
+4. Store results in sentiment table
+5. Aggregate by product
+6. Identify products with high negative sentiment
+
+REQUIREMENTS:
+1. Use SNOWFLAKE.CORTEX.COMPLETE() with 'claude-3-5-sonnet'
+2. Request JSON format: {"sentiment": "POSITIVE|NEGATIVE|NEUTRAL", "confidence": 0-1, "reason": ""}
+3. Use TRY_PARSE_JSON() to extract fields
+4. Sentiment must be uppercase: POSITIVE, NEGATIVE, NEUTRAL
+5. Confidence 0-1 (reasonable to store as FLOAT)
+6. Create review_sentiment table with results
+7. Aggregate by product_id showing sentiment percentages
+8. ORDER products by negative_pct DESC
+
+EXAMPLE:
+WITH sentiment_analysis AS (
+  SELECT review_id, review_text,
+    SNOWFLAKE.CORTEX.COMPLETE(
+      'claude-3-5-sonnet',
+      'Classify: "' || review_text || '"...'
+    ) as response
+  FROM reviews
+)
+SELECT
+  review_id,
+  TRY_PARSE_JSON(response):sentiment as sentiment,
+  TRY_PARSE_JSON(response):confidence as confidence
+FROM sentiment_analysis;
+
+DELIVERABLES:
+1. Sentiment classification query (LIMIT 10)
+2. Review sentiment table creation
+3. Sample sentiment results (3-5 rows)
+4. Product summary (total, positive%, negative%)
+5. Identify top 2 products with highest negative sentiment
+6. Explain confidence scores
+7. Show how to use for product improvement prioritization

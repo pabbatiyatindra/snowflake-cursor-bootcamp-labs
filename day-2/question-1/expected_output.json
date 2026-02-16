@@ -1,0 +1,58 @@
+{
+  "query_description": "Rank customers by total spending within each month using ROW_NUMBER()",
+  "business_context": "Identify top spenders by month for targeted marketing and customer segmentation",
+  "expected_columns": [
+    {
+      "name": "CUSTOMER_ID",
+      "type": "INTEGER",
+      "description": "Unique customer identifier"
+    },
+    {
+      "name": "ORDER_MONTH",
+      "type": "DATE",
+      "description": "First day of month (truncated from order_date)"
+    },
+    {
+      "name": "TOTAL_SPENT",
+      "type": "DECIMAL(10,2)",
+      "description": "Sum of all order amounts for this customer in this month"
+    },
+    {
+      "name": "RANK",
+      "type": "INTEGER",
+      "description": "Rank within month (1=highest spender, 2=second highest, etc)"
+    }
+  ],
+  "validation_rules": [
+    "Results must include customer_id, order_month, total_spent, rank columns",
+    "Rank 1 should have highest total_spent for that month",
+    "Rank increments by 1 for each row within partition",
+    "Rank resets to 1 for each new month (PARTITION BY month)",
+    "Results ordered by order_month DESC, then rank ASC",
+    "Maximum 10 rows returned (LIMIT 10)",
+    "No NULL values in customer_id, total_spent, or rank",
+    "total_spent is sum of amounts grouped by customer and month",
+    "Months shown in descending order (newest first)"
+  ],
+  "sample_validation": {
+    "row_1": {
+      "expectation": "Highest spender of most recent month gets rank 1",
+      "check": "RANK = 1 AND first month shown"
+    },
+    "row_2": {
+      "expectation": "Second highest spender of that month gets rank 2",
+      "check": "RANK = 2 AND same month as row 1"
+    },
+    "month_boundary": {
+      "expectation": "When month changes, rank resets to 1",
+      "check": "Different ORDER_MONTH → RANK goes back to 1"
+    }
+  },
+  "common_mistakes": [
+    "Using GROUP BY only (results in single row per customer-month, loses window function)",
+    "Forgetting PARTITION BY (ranks across all months, not within each)",
+    "Using RANK() instead of ROW_NUMBER() (RANK() has gaps on ties)",
+    "Window function ORDER BY using descending instead of DESC (wrong rank order)",
+    "Final ORDER BY missing (results not sorted by month then rank)"
+  ]
+}

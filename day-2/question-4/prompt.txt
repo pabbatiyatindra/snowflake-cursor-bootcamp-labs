@@ -1,0 +1,85 @@
+You are a Snowflake performance optimization expert working with a student to optimize a slow query.
+
+CONTEXT:
+The analytics team submitted this query that's timing out on large datasets:
+
+SELECT
+  o.order_id,
+  o.customer_id,
+  c.customer_name,
+  o.amount,
+  (SELECT COUNT(*) FROM bootcamp_db.training.orders o2
+   WHERE o2.customer_id = o.customer_id) as lifetime_orders,
+  ROW_NUMBER() OVER (ORDER BY o.amount DESC) as overall_rank
+FROM bootcamp_db.training.orders o
+JOIN bootcamp_db.training.customers c
+  ON o.customer_id = c.customer_id
+WHERE EXISTS (
+  SELECT 1 FROM bootcamp_db.training.orders o3
+  WHERE o3.customer_id = o.customer_id
+    AND o3.amount > (SELECT AVG(amount) FROM bootcamp_db.training.orders)
+);
+
+PROBLEMS IN THIS QUERY:
+1. Subquery in SELECT clause (line with lifetime_orders)
+   - Runs for EVERY row
+   - Correlates on customer_id
+   - Very expensive for large result sets
+
+2. Correlated WHERE EXISTS subquery
+   - Evaluates per row
+   - Has nested aggregation (SELECT AVG)
+
+3. Inefficient filtering logic
+   - Multiple passes through orders table
+   - Redundant aggregations
+
+TASK FOR STUDENT:
+Refactor this query to be performant using:
+1. CTEs to pre-calculate aggregates (one pass)
+2. Window functions instead of SELECT subqueries
+3. Efficient filtering with JOINs instead of EXISTS
+
+YOUR APPROACH:
+1. First, explain what each subquery does (help student understand)
+2. Show how COUNT(*) OVER() replaces the lifetime_orders subquery
+3. Show how CTE pre-calculates the AVG(amount) once
+4. Show how to filter based on pre-calculated value without EXISTS
+5. Write the optimized version step-by-step
+
+EXPECTED OPTIMIZED STRUCTURE:
+WITH avg_calc AS (
+  SELECT AVG(amount) as avg_amount FROM orders
+),
+customer_orders_stats AS (
+  SELECT
+    customer_id,
+    COUNT(*) OVER (PARTITION BY customer_id) as lifetime_orders
+  FROM orders
+),
+filtered_customers AS (
+  SELECT DISTINCT customer_id
+  FROM orders
+  WHERE amount > (SELECT avg_amount FROM avg_calc)
+)
+SELECT
+  o.order_id,
+  o.customer_id,
+  c.customer_name,
+  o.amount,
+  cos.lifetime_orders,
+  ROW_NUMBER() OVER (ORDER BY o.amount DESC) as overall_rank
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN customer_orders_stats cos ON o.customer_id = cos.customer_id
+WHERE o.customer_id IN (SELECT customer_id FROM filtered_customers)
+ORDER BY overall_rank;
+
+DELIVERABLES:
+1. Analyze the slow query step-by-step
+2. Identify the three main performance issues
+3. Show how each optimization fixes the issue
+4. Provide the complete refactored query
+5. Verify results match original query
+6. Run EXPLAIN on both and compare cost
+7. Explain why optimized version is faster
