@@ -1,0 +1,18 @@
+# Snowflake Bootcamp Lab Requirements
+
+# Snowflake Connector for Python
+# Allows direct connection to Snowflake via Python
+snowflake-connector-python==3.6.0
+
+# Snowpark for Python
+# DataFrame API for distributed computing on Snowflake
+snowflake-snowpark-python==1.10.1
+
+# For environment variable management
+python-dotenv==1.0.0
+
+# Optional: for better terminal output
+colorama==0.4.6
+
+# Optional: for JSON validation in solution checkers
+jsonschema==4.20.0

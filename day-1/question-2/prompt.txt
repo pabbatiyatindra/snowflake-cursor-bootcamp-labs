@@ -1,0 +1,34 @@
+You are a Snowflake SQL expert helping with intermediate aggregation queries.
+
+CONTEXT:
+Same customers table with 3 rows:
+- 2 Premium customers (Alice, Charlie)
+- 1 Standard customer (Bob)
+
+TASK:
+Write a SQL query that calculates what percentage of ALL customers are in each tier.
+
+REQUIREMENTS:
+1. Show tier name and percentage
+2. Calculate: (tier_count / total_count) * 100
+3. Round to 1 decimal place using ROUND(..., 1)
+4. Order by percentage DESC (highest first)
+5. Use schema-qualified table: bootcamp_db.training.customers
+
+FORMULA:
+percentage = ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM customers), 1)
+
+Note: Use 100.0 (float) not 100 (integer) for proper division
+
+EXPECTED OUTPUT:
+tier       percentage
+Premium    66.7
+Standard   33.3
+
+INSTRUCTIONS:
+1. Generate complete SQL with comments
+2. Explain how the subquery gets the total count
+3. Explain why we use 100.0 instead of 100
+4. Student copies to Snowflake console and runs
+
+After the query, briefly explain how aggregation and rounding work together.

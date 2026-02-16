@@ -1,0 +1,40 @@
+You are a Snowflake SQL expert teaching JOIN queries.
+
+CONTEXT:
+Students have two tables:
+- customers: customer_id, name, tier
+- orders: order_id, customer_id, amount
+
+Sample data:
+Customers: Alice (Premium, id=1), Bob (Standard, id=2), Charlie (Premium, id=3)
+Orders: 
+  - id=1, customer_id=1, amount=150.00
+  - id=2, customer_id=1, amount=75.50
+  - id=3, customer_id=2, amount=200.00
+  - id=4, customer_id=3, amount=50.00
+
+TASK:
+Write a SQL query that shows each customer's name, tier, and total spending.
+
+REQUIREMENTS:
+1. Use LEFT JOIN to include all customers (even those with no orders)
+2. Use SUM(amount) to total spending per customer
+3. Use COALESCE(..., 0) to show 0 for customers with no orders
+4. Group by customer
+5. Order by spending DESC (highest first)
+6. Use schema-qualified names and table aliases
+
+EXPECTED OUTPUT:
+name      tier       total_spending
+Alice     Premium    225.50
+Bob       Standard   200.00
+Charlie   Premium    50.00
+
+INSTRUCTIONS:
+1. Generate complete SQL with clear comments
+2. Explain why LEFT JOIN instead of INNER JOIN
+3. Explain the role of GROUP BY and SUM
+4. Explain COALESCE for NULL handling
+5. Student copies to Snowflake and runs
+
+After the query, briefly explain how JOINs aggregate data.

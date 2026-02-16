@@ -1,0 +1,35 @@
+{
+  "query_description": "Count customers by tier using GROUP BY",
+  "business_context": "Understand customer distribution across service tiers",
+  "expected_columns": [
+    {
+      "name": "TIER",
+      "type": "VARCHAR",
+      "description": "Service tier (Premium, Standard, etc.)"
+    },
+    {
+      "name": "CUSTOMER_COUNT",
+      "type": "INTEGER",
+      "description": "Number of customers in this tier"
+    }
+  ],
+  "expected_rows": [
+    {
+      "TIER": "PREMIUM",
+      "CUSTOMER_COUNT": 2,
+      "explanation": "Alice and Charlie are both Premium tier"
+    },
+    {
+      "TIER": "STANDARD",
+      "CUSTOMER_COUNT": 1,
+      "explanation": "Only Bob is Standard tier"
+    }
+  ],
+  "total_rows": 2,
+  "validation_notes": [
+    "Snowflake stores strings in UPPERCASE by default",
+    "Results should be ordered alphabetically by tier",
+    "GROUP BY tier ensures all customers with same tier are counted together",
+    "No NULL values expected in this sample data"
+  ]
+}

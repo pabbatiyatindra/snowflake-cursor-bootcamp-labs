@@ -1,0 +1,49 @@
+{
+  "query_description": "Join customers with orders to show spending by customer",
+  "business_context": "See total spending per customer including those with no orders",
+  "expected_columns": [
+    {
+      "name": "NAME",
+      "type": "VARCHAR",
+      "description": "Customer name"
+    },
+    {
+      "name": "TIER",
+      "type": "VARCHAR",
+      "description": "Customer service tier"
+    },
+    {
+      "name": "TOTAL_SPENDING",
+      "type": "DECIMAL(10,2)",
+      "description": "Sum of all order amounts for this customer"
+    }
+  ],
+  "expected_rows": [
+    {
+      "NAME": "ALICE",
+      "TIER": "PREMIUM",
+      "TOTAL_SPENDING": 225.50,
+      "calculation": "Order 1 (150) + Order 2 (75.50) = 225.50"
+    },
+    {
+      "NAME": "BOB",
+      "TIER": "STANDARD",
+      "TOTAL_SPENDING": 200.00,
+      "calculation": "Order 3 (200) = 200.00"
+    },
+    {
+      "NAME": "CHARLIE",
+      "TIER": "PREMIUM",
+      "TOTAL_SPENDING": 50.00,
+      "calculation": "Order 4 (50) = 50.00"
+    }
+  ],
+  "total_rows": 3,
+  "validation_notes": [
+    "Results ordered by total_spending DESC (highest first)",
+    "All 3 customers appear (LEFT JOIN includes all customers)",
+    "No NULL values in spending (COALESCE converts NULL to 0)",
+    "Totals are sums of all orders per customer",
+    "Snowflake stores strings in UPPERCASE by default"
+  ]
+}

@@ -1,0 +1,37 @@
+You are a Snowflake SQL expert teaching advanced filtering with WHERE and HAVING.
+
+CONTEXT:
+Students have customers and orders tables (same as previous questions).
+
+TASK:
+Write a query to find Premium tier customers who have spent more than $100 total.
+
+KEY CONCEPT:
+This requires TWO filters:
+1. WHERE tier = 'Premium' (filter rows before grouping)
+2. HAVING SUM(amount) > 100 (filter groups after aggregation)
+
+REQUIREMENTS:
+1. Use LEFT JOIN between customers and orders
+2. Add WHERE tier = 'Premium' before GROUP BY
+3. Add HAVING SUM(amount) > 100 after GROUP BY
+4. Include: name, tier, total_spending
+5. Order by spending DESC
+
+EXPECTED OUTPUT:
+Only Alice qualifies (Premium + $225.50 > $100):
+name   tier     total_spending
+Alice  Premium  225.50
+
+IMPORTANT:
+- Bob is excluded (Standard tier)
+- Charlie is excluded (Premium but only $50 < $100)
+
+INSTRUCTIONS:
+1. Generate complete SQL with detailed comments
+2. Explain the difference between WHERE and HAVING
+3. Explain the order of execution: FROM → WHERE → GROUP BY → HAVING → ORDER BY
+4. Show why HAVING can't be used for individual rows
+5. Student copies to Snowflake and runs
+
+After the query, explain when to use WHERE vs HAVING.

@@ -1,0 +1,36 @@
+{
+  "query_description": "Calculate percentage of customers in each tier",
+  "business_context": "Understand customer base composition - what % are premium vs standard",
+  "expected_columns": [
+    {
+      "name": "TIER",
+      "type": "VARCHAR",
+      "description": "Service tier"
+    },
+    {
+      "name": "PERCENTAGE",
+      "type": "DECIMAL(10,1)",
+      "description": "Percentage of total customers (rounded to 1 decimal)"
+    }
+  ],
+  "expected_rows": [
+    {
+      "TIER": "PREMIUM",
+      "PERCENTAGE": 66.7,
+      "calculation": "2 customers / 3 total * 100 = 66.666... → rounds to 66.7"
+    },
+    {
+      "TIER": "STANDARD",
+      "PERCENTAGE": 33.3,
+      "calculation": "1 customer / 3 total * 100 = 33.333... → rounds to 33.3"
+    }
+  ],
+  "total_rows": 2,
+  "validation_notes": [
+    "Results ordered by percentage DESC (highest first)",
+    "Percentages rounded to exactly 1 decimal place",
+    "Sum of percentages: 66.7 + 33.3 = 100.0",
+    "Use 100.0 (float) not 100 (integer) for division to get decimals",
+    "Subquery (SELECT COUNT(*) FROM customers) gives total count of 3"
+  ]
+}

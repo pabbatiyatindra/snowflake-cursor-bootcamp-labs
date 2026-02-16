@@ -1,0 +1,255 @@
+# Snowflake + Cursor AI Development Rules
+
+## Context
+You are helping with the Snowflake + Cursor AI Bootcamp.
+Students are learning SQL, Python, and modern data pipeline patterns.
+This is a learning environment - prioritize clarity and educational value.
+
+## Snowflake SQL Best Practices
+
+### 1. Always Use Schema-Qualified Table Names
+**Good**: `SELECT * FROM bootcamp_db.training.customers`
+**Bad**: `SELECT * FROM customers`
+Reason: Explicit, works across different contexts, prevents ambiguity
+
+### 2. Use UPPERCASE for SQL Keywords
+```sql
+SELECT col1, col2
+FROM my_table
+WHERE year = 2024
+ORDER BY col1 DESC
+```
+Reason: Industry standard, improves readability
+
+### 3. Warehouse Sizing for Development
+- **SMALL (1 credit/hr)**: For learning, simple queries
+- **MEDIUM (2 credits/hr)**: For transformations, joins
+- For bootcamp: Use SMALL initially, scale up only if needed
+
+**Example**: `USE WAREHOUSE bootcamp_db.compute_wh;`
+
+### 4. Micro-Partition Pruning & Performance
+
+**Use QUALIFY for deduplication** instead of ROW_NUMBER subqueries:
+```sql
+-- Good (uses QUALIFY, more efficient)
+SELECT * FROM orders
+QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY date DESC) = 1
+
+-- Less efficient (requires subquery)
+SELECT * FROM (
+  SELECT *, ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY date DESC) as rn
+  FROM orders
+) WHERE rn = 1
+```
+
+**Use clustering keys** for frequently-filtered columns:
+```sql
+CREATE TABLE sales (
+  id INT,
+  region VARCHAR,
+  date DATE,
+  amount DECIMAL
+)
+CLUSTER BY (region, DATE_TRUNC('MONTH', date));
+```
+
+### 5. Handle Snowflake String Behavior
+**Important**: Snowflake stores strings in UPPERCASE by default
+```sql
+-- This works (Snowflake auto-uppercases)
+SELECT * FROM customers WHERE region = 'us'  -- matches 'US'
+
+-- For case-sensitive comparisons, use COLLATE
+SELECT * FROM customers WHERE region COLLATE UTF8 = 'us'  -- only matches 'us'
+```
+
+### 6. Use CTEs for Readability
+```sql
+WITH customer_orders AS (
+  SELECT customer_id, COUNT(*) as order_count, SUM(amount) as total_spent
+  FROM orders
+  GROUP BY customer_id
+),
+high_value_customers AS (
+  SELECT * FROM customer_orders
+  WHERE total_spent > 1000
+)
+SELECT * FROM high_value_customers
+ORDER BY total_spent DESC;
+```
+
+### 7. NULL Handling
+```sql
+-- Use COALESCE for defaults
+SELECT COALESCE(discount, 0) as discount  -- NULL becomes 0
+
+-- Use IS NULL for checks (not = NULL which always returns NULL)
+SELECT * FROM orders WHERE discount IS NOT NULL
+```
+
+## Snowpark Python Best Practices
+
+### 1. Always Use Type Hints
+```python
+from snowflake.snowpark import Session, DataFrame
+from snowflake.snowpark.functions import col, sum as snow_sum
+
+def get_customer_totals(session: Session) -> DataFrame:
+    """Get total spending per customer."""
+    df: DataFrame = session.table('bootcamp_db.training.orders')
+    return df.group_by('customer_id').agg(snow_sum('amount'))
+```
+
+### 2. Lazy Evaluation - Use .collect() or .show() for Execution
+```python
+# Lazy - not executed yet
+df = session.table('customers').filter(col('tier') == 'Premium')
+
+# Execute and display
+df.show()  # Shows first 10 rows
+
+# Execute and get results
+results = df.collect()  # Returns list of Row objects
+```
+
+### 3. Import Snowpark Functions, Not Column Names
+```python
+# Good - functions are lazy
+from snowflake.snowpark.functions import col, sum, avg, max
+
+# Build query lazily
+df.select(col('name'), col('amount')).show()
+
+# Bad - direct column access might execute
+df[['name', 'amount']].show()
+```
+
+### 4. Error Handling in Snowpark
+```python
+try:
+    df = session.table('bootcamp_db.training.nonexistent_table')
+    df.show()
+except Exception as e:
+    print(f"Error: {e}")
+    print("Check table name and schema")
+```
+
+### 5. DataFrame Transformations are Chainable
+```python
+# Chain multiple operations
+result = (
+    session.table('orders')
+    .filter(col('amount') > 100)
+    .group_by('customer_id')
+    .agg(sum('amount'))
+    .sort(desc('SUM(AMOUNT)'))
+)
+result.show()
+```
+
+## Code Style & Documentation
+
+### 1. Write Docstrings for Functions
+```python
+def calculate_customer_metrics(session: Session, min_spending: float) -> DataFrame:
+    """
+    Calculate spending metrics for high-value customers.
+
+    Args:
+        session: Snowflake session object
+        min_spending: Minimum spending threshold
+
+    Returns:
+        DataFrame with customer_id, total_spent, order_count, avg_order_value
+
+    Example:
+        >>> result = calculate_customer_metrics(session, min_spending=1000)
+        >>> result.show()
+    """
+    # Implementation
+```
+
+### 2. Add Comments for Complex Logic
+```sql
+-- Dedup orders: keep only the most recent order per customer
+-- Using QUALIFY (Snowflake-specific, more efficient than subquery)
+SELECT
+  customer_id,
+  order_id,
+  order_date,
+  amount
+FROM orders
+QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY order_date DESC) = 1
+```
+
+### 3. Avoid Magic Numbers
+```python
+# Bad
+for i in range(5):
+    print(i)
+
+# Good
+MAX_RETRIES = 5
+for attempt in range(MAX_RETRIES):
+    try:
+        # retry logic
+    except:
+        pass
+```
+
+## Bootcamp-Specific Guidelines
+
+### 1. Educational Focus
+- Prioritize clarity over optimization initially
+- Add comments explaining the "why" not just "what"
+- Show multiple approaches when relevant
+
+### 2. Learning Progression
+- Day 1-2: Basic SQL (SELECT, GROUP BY, JOINs, window functions)
+- Day 3: Snowpark Python basics (DataFrames, transformations)
+- Day 4: Advanced patterns (Streams, Tasks, Dynamic Tables)
+- Day 5: Cortex AI integration
+
+### 3. Testing & Validation
+- Always show expected output examples
+- Include edge case handling
+- Use solution_checker.py to validate
+
+### 4. AI Prompts in prompt.txt
+- Clear problem statement
+- Example data/tables
+- Expected output format
+- Edge cases to consider
+
+## When to Ask for Help
+
+- "Explain QUALIFY in Snowflake" ✅ Ask Cursor
+- "Optimize this query" ✅ Ask Cursor
+- "Is this the right approach?" ✅ Ask Claude Code
+- "Build a complete solution for me" ❌ Ask to guide, not do
+
+## File Organization
+
+```
+bootcamp-labs/
+├── README.md
+├── .cursorrules (this file)
+├── .env.example
+├── validate_connection.py
+├── requirements.txt
+├── day-1/
+│   ├── setup.sql
+│   ├── README.md
+│   ├── question-1/
+│   │   ├── README.md
+│   │   ├── prompt.txt
+│   │   ├── solution_checker.py
+│   │   └── expected_output.json
+│   └── ... (question-2, question-3, question-4)
+└── ... (day-2 through day-5)
+```
+
+---
+
+**Remember**: The goal is to learn, not just pass. Take time to understand concepts, ask questions, and don't be afraid to experiment!

@@ -1,0 +1,41 @@
+You are a Snowflake SQL expert helping a student learn SQL fundamentals.
+
+CONTEXT:
+The student has a `customers` table in Snowflake (bootcamp_db.training schema) with these columns:
+- customer_id (INT): Unique identifier
+- name (VARCHAR): Customer name
+- tier (VARCHAR): Service tier - Premium, Standard, or other
+
+The table has 3 sample rows:
+- customer_id=1, name='Alice', tier='Premium'
+- customer_id=2, name='Bob', tier='Standard'
+- customer_id=3, name='Charlie', tier='Premium'
+
+TASK:
+Write a SQL query that counts how many customers we have in each service tier.
+
+REQUIREMENTS:
+1. Use GROUP BY to group customers by tier
+2. Use COUNT(*) to count customers in each group
+3. Show results with columns: tier, customer_count
+4. Order results by tier name (alphabetically)
+5. Use schema-qualified table name: bootcamp_db.training.customers
+
+EXAMPLE OUTPUT:
+tier       customer_count
+Premium    2
+Standard   1
+
+INSTRUCTIONS FOR THE STUDENT:
+1. I will generate the complete SQL query below
+2. Copy the query into your Snowflake console
+3. Execute it and verify the results match the expected output
+4. Then run: python3 solution_checker.py to validate
+
+Please generate a well-formatted, properly commented SQL query with:
+- Clear comments explaining each part
+- Proper indentation
+- UPPERCASE SQL keywords
+- Explanation of how GROUP BY and COUNT work
+
+After the query, briefly explain how it works.

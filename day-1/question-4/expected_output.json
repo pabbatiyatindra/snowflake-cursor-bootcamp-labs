@@ -1,0 +1,41 @@
+{
+  "query_description": "Find Premium customers who spent more than $100",
+  "business_context": "Identify customers eligible for VIP Rewards program",
+  "expected_columns": [
+    {
+      "name": "NAME",
+      "type": "VARCHAR",
+      "description": "Customer name"
+    },
+    {
+      "name": "TIER",
+      "type": "VARCHAR",
+      "description": "Service tier"
+    },
+    {
+      "name": "TOTAL_SPENDING",
+      "type": "DECIMAL(10,2)",
+      "description": "Total spending by customer"
+    }
+  ],
+  "expected_rows": [
+    {
+      "NAME": "ALICE",
+      "TIER": "PREMIUM",
+      "TOTAL_SPENDING": 225.50,
+      "reason": "Premium tier + $225.50 > $100 ✓"
+    }
+  ],
+  "total_rows": 1,
+  "excluded_customers": {
+    "BOB": "Standard tier (not Premium)",
+    "CHARLIE": "Premium tier but $50 < $100"
+  },
+  "validation_notes": [
+    "WHERE filters before grouping: tier = 'Premium'",
+    "HAVING filters after grouping: SUM(amount) > 100",
+    "Results ordered by spending DESC",
+    "Only Alice meets both criteria",
+    "Order execution: FROM → WHERE → GROUP BY → HAVING → ORDER BY → SELECT"
+  ]
+}
