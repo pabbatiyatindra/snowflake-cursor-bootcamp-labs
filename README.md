@@ -264,9 +264,9 @@ See `docs/troubleshooting.md` for solutions.
 ## 🤝 Contributing
 
 Found an issue or have a suggestion?
-- 📧 Email: support@snowflake-bootcamp.dev
-- 🐙 GitHub Issues: [Report a bug](https://github.com/pabbatiyatindra/snowflake-bootcamp-labs/issues)
-- 💬 Discussions: [Ask a question](https://github.com/pabbatiyatindra/snowflake-bootcamp-labs/discussions)
+- 📧 Email: yatindra.pabbati@mastechdigital.com
+- 🐙 GitHub Issues: [Report a bug](https://github.com/pabbatiyatindra/snowflake-cursor-bootcamp-labs/issues)
+- 💬 Discussions: [Ask a question](https://github.com/pabbatiyatindra/snowflake-cursor-bootcamp-labs/discussions)
 
 ---
 
