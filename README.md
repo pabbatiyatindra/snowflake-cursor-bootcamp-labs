@@ -35,7 +35,7 @@ python3 validate_connection.py
 If successful, you'll see:
 ```
 ✅ Connected to Snowflake successfully!
-✅ Database: bootcamp_db
+✅ Database: dm_db
 ✅ Schema: training
 ✅ Role: bootcamp_student_role
 ```
